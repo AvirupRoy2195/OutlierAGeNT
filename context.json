@@ -1,0 +1,83 @@
+{
+  "agent_name": "Outlier_agent",
+  "version": "0.1.0",
+  "purpose": "Detect, explain, and impute outliers in tabular datasets while choosing methods appropriate to the data context.",
+  "defaults": {
+    "method": "iqr",
+    "imputation": "median",
+    "iqr_multiplier": 1.5,
+    "zscore_threshold": 3.0,
+    "modified_zscore_threshold": 3.5
+  },
+  "supported_methods": {
+    "iqr": {
+      "best_for": "Skewed or non-normal numeric data.",
+      "notes": "Uses Q1 - k*IQR and Q3 + k*IQR bounds. A good default for general tabular data."
+    },
+    "zscore": {
+      "best_for": "Approximately normal numeric data with enough rows.",
+      "notes": "Flags values more than a configured number of standard deviations from the mean."
+    },
+    "modified_zscore": {
+      "best_for": "Small or contaminated datasets where robust median-based detection is preferred.",
+      "notes": "Uses median absolute deviation and is less sensitive to extreme values than classic z-score."
+    }
+  },
+  "supported_imputations": {
+    "median": "Replace outliers with the column median.",
+    "mean": "Replace outliers with the column mean.",
+    "cap": "Winsorize outliers to the detected lower or upper bound.",
+    "drop": "Remove rows containing detected outliers.",
+    "none": "Detect only; leave data unchanged."
+  },
+  "domain_profiles": {
+    "general": {
+      "method": "iqr",
+      "imputation": "median",
+      "reason": "Robust default when no domain-specific assumptions are available."
+    },
+    "finance": {
+      "method": "modified_zscore",
+      "imputation": "cap",
+      "reason": "Financial values can have heavy tails; capping preserves row count while reducing extreme leverage."
+    },
+    "healthcare": {
+      "method": "iqr",
+      "imputation": "none",
+      "reason": "Clinical extremes can be meaningful or safety-critical, so detection should be reviewed before replacement."
+    },
+    "sensor": {
+      "method": "modified_zscore",
+      "imputation": "median",
+      "reason": "Sensor spikes are often isolated faults; robust median replacement is usually safer than mean replacement."
+    },
+    "manufacturing": {
+      "method": "zscore",
+      "imputation": "cap",
+      "reason": "Stable process metrics often have known normal operating bands."
+    },
+    "survey": {
+      "method": "iqr",
+      "imputation": "median",
+      "reason": "Survey responses are commonly skewed and ordinal-like."
+    }
+  },
+  "llm": {
+    "provider": "openai",
+    "api_key_env": "OUTLIER_AGENT_API_KEY",
+    "endpoint_env": "OUTLIER_AGENT_ENDPOINT",
+    "model_env": "OUTLIER_AGENT_MODEL",
+    "temperature_env": "OUTLIER_AGENT_TEMPERATURE",
+    "endpoint": "https://api.openai.com/v1",
+    "model": "gpt-4.1-mini",
+    "temperature": 0.1,
+    "use_when_available": true
+  },
+  "planning_rules": [
+    "Prefer domain_profiles when a domain is supplied.",
+    "Prefer modified_zscore for small datasets or suspected contaminated samples.",
+    "Prefer zscore only when data is approximately normal and the row count is adequate.",
+    "Avoid automatic imputation in healthcare, safety, compliance, or audit-sensitive datasets unless the user explicitly asks for it.",
+    "Always return the detection report alongside the cleaned records."
+  ]
+}

@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.py[cod]
+*.xlsx
+*.xlsm
+*_cleaned.csv
+*_report.json
