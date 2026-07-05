@@ -1,0 +1,18 @@
+# Google ADK with LiteLLM extension (pulls in google-adk + litellm)
+google-adk[extensions]>=1.0.0
+litellm>=1.40.0
+
+# A2A server extras (uvicorn + Agent2Agent support)
+google-adk[a2a]>=1.0.0
+uvicorn[standard]>=0.30.0
+
+# OpenAI SDK (used directly by LiteLLM, but handy for ad-hoc calls too)
+openai>=1.30.0
+
+# Data + ML stack used by the deterministic tools
+pandas>=2.0.0
+scikit-learn>=1.3.0
+joblib>=1.3.0
+openpyxl>=3.1.0
+# XGBoost is optional — modeling_tools imports it lazily
+# xgboost>=2.0.0
