@@ -5,3 +5,15 @@ __pycache__/
 *.xlsm
 *_cleaned.csv
 *_report.json
+*_intake_manifest.json
+*_missing_imputed.csv
+*_outliers_imputed.csv
+*_model_report.json
+*_model.joblib
+Google_ADK/uploads/
+Google_ADK/tmp/
+Google_ADK/logs/
+Google_ADK/.adk/
+Google_ADK/offline_outputs/
+Google_ADK/tmp_quota_test/
+offline_outputs/
